@@ -1,4 +1,4 @@
-package com.tomkasp;
+package com.tomkasp.config;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -6,9 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
-/**
- * Created by tomkasp on 9/2/14.
- */
+
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory
         implements ApplicationContextAware {
 

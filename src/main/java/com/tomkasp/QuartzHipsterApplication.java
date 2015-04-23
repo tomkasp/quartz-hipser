@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class QuartzHipsterApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(QuartzHipsterApplication.class, args);
     }
+
 }

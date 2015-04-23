@@ -1,4 +1,4 @@
-package com.tomkasp;
+package com.tomkasp.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,9 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigInteger;
 
-/**
- * Created by tomkasp on 9/1/14.
- */
 
 @Entity
 @Table(name = "QRTZ_SCHEDULER_STATE")
@@ -26,6 +23,39 @@ public class SchedulerState {
 
     @Column(name = "checkin_interval")
     private BigInteger checkinInterval;
+
+
+    public String getSchedulerName() {
+        return schedulerName;
+    }
+
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+
+    public BigInteger getLastCheckInTime() {
+        return lastCheckInTime;
+    }
+
+    public void setLastCheckInTime(BigInteger lastCheckInTime) {
+        this.lastCheckInTime = lastCheckInTime;
+    }
+
+    public BigInteger getCheckinInterval() {
+        return checkinInterval;
+    }
+
+    public void setCheckinInterval(BigInteger checkinInterval) {
+        this.checkinInterval = checkinInterval;
+    }
 
     @Override
     public String toString() {

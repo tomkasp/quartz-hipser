@@ -1,5 +1,6 @@
-package com.tomkasp;
+package com.tomkasp.config;
 
+import com.tomkasp.job.MyJob;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -16,9 +17,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * Created by tomkasp on 9/2/14.
- */
+
 @Configuration
 public class QuartzConfig {
 
@@ -30,7 +29,6 @@ public class QuartzConfig {
 
     @Autowired
     ApplicationContext applicationContext;
-
 
     @Bean
     public SchedulerFactoryBean quartzScheduler() {
@@ -49,7 +47,6 @@ public class QuartzConfig {
         Trigger[] triggers = {
                 processMyJobTrigger().getObject()
         };
-
         quartzScheduler.setTriggers(triggers);
 
         return quartzScheduler;

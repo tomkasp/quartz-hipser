@@ -1,13 +1,11 @@
-package com.tomkasp;
+package com.tomkasp.job;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-/**
- * Created by tomkasp on 9/2/14.
- */
+
 public class RecurentJob implements Job {
 
 
