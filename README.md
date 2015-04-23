@@ -1,3 +1,1 @@
-quartz-hipser
-============= local changes
-remote changes
+Simple demo how to use quartz with spring boot
