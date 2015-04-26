@@ -1,14 +1,15 @@
 package com.tomkasp.api;
 
 import com.tomkasp.entities.QuartzCronTriggers;
+import com.tomkasp.entities.QuartzJobDetails;
 import com.tomkasp.entities.QuartzTriggers;
 import com.tomkasp.entities.SchedulerState;
 import com.tomkasp.repository.QuartzCronTriggersRepository;
+import com.tomkasp.repository.QuartzJobDetailsRepository;
 import com.tomkasp.repository.QuartzTriggersRepository;
 import com.tomkasp.repository.SchedulerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class SchedulerApi {
     private final SchedulerRepository schedulerRepository;
     private final QuartzTriggersRepository quartzTriggersRepository;
     private final QuartzCronTriggersRepository quartzCronTriggersRepository;
+    private final QuartzJobDetailsRepository quartzJobDetailsRepository;
 
     @Autowired
-    public SchedulerApi(SchedulerRepository schedulerRepository, QuartzTriggersRepository quartzTriggersRepository, QuartzCronTriggersRepository quartzCronTriggersRepository) {
+    public SchedulerApi(SchedulerRepository schedulerRepository, QuartzTriggersRepository quartzTriggersRepository, QuartzCronTriggersRepository quartzCronTriggersRepository, QuartzJobDetailsRepository quartzJobDetails) {
         this.schedulerRepository = schedulerRepository;
         this.quartzTriggersRepository = quartzTriggersRepository;
         this.quartzCronTriggersRepository = quartzCronTriggersRepository;
+        this.quartzJobDetailsRepository = quartzJobDetails;
     }
 
     @RequestMapping("/schedulers")
@@ -46,5 +49,9 @@ public class SchedulerApi {
         return quartzCronTriggersRepository.findAll();
     }
 
+    @RequestMapping("/jobdetails")
+    public List<QuartzJobDetails> getAllQuartzJobDetails(){
+        return quartzJobDetailsRepository.findAll();
+    }
 
 }
