@@ -20,14 +20,13 @@ public class SchedulerApi {
     private final SchedulerRepository schedulerRepository;
     private final QuartzTriggersRepository quartzTriggersRepository;
     private final QuartzCronTriggersRepository quartzCronTriggersRepository;
-    private final QuartzJobDetailsRepository quartzJobDetailsRepository;
+
 
     @Autowired
-    public SchedulerApi(SchedulerRepository schedulerRepository, QuartzTriggersRepository quartzTriggersRepository, QuartzCronTriggersRepository quartzCronTriggersRepository, QuartzJobDetailsRepository quartzJobDetails) {
+    public SchedulerApi(SchedulerRepository schedulerRepository, QuartzTriggersRepository quartzTriggersRepository, QuartzCronTriggersRepository quartzCronTriggersRepository) {
         this.schedulerRepository = schedulerRepository;
         this.quartzTriggersRepository = quartzTriggersRepository;
         this.quartzCronTriggersRepository = quartzCronTriggersRepository;
-        this.quartzJobDetailsRepository = quartzJobDetails;
     }
 
     @RequestMapping("/schedulers")
@@ -49,9 +48,6 @@ public class SchedulerApi {
         return quartzCronTriggersRepository.findAll();
     }
 
-    @RequestMapping("/jobdetails")
-    public List<QuartzJobDetails> getAllQuartzJobDetails(){
-        return quartzJobDetailsRepository.findAll();
-    }
+
 
 }
