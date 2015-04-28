@@ -2,6 +2,8 @@ package com.tomkasp.config;
 
 import com.tomkasp.job.MyJob;
 import org.quartz.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +22,8 @@ import java.util.Properties;
 
 @Configuration
 public class QuartzConfig {
+
+    static final Logger LOG = LoggerFactory.getLogger(QuartzConfig.class);
 
     @Autowired
     DataSource dataSource;
@@ -78,12 +82,11 @@ public class QuartzConfig {
         try {
             propertiesFactoryBean.afterPropertiesSet();
             properties = propertiesFactoryBean.getObject();
-            System.out.println("PROPERTIES!!!!" + properties.getProperty("org.quartz.jobStore.driverDelegateClass"));
+            LOG.info("Value of the property org.quartz.jobStore.driverDelegateClass {}", properties.getProperty("org.quartz.jobStore.driverDelegateClass"));
         }
         catch (IOException e) {
             throw new RuntimeException("Unable to load quartz.properties", e);
         }
-
         return properties;
     }
 
