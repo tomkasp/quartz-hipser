@@ -1,4 +1,4 @@
-package com.tomkasp.entities;
+package com.tomkasp.entities.trigers;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -68,12 +68,3 @@ public class QuartzCronTriggers {
         this.timeZoneId = timeZoneId;
     }
 }
-
-
-//CREATE TABLE QRTZ_CRON_TRIGGERS (
-//        SCHED_NAME VARCHAR(120) NOT NULL,
-//    TRIGGER_NAME VARCHAR (200)  NOT NULL ,
-//    TRIGGER_GROUP VARCHAR (200)  NOT NULL ,
-//    CRON_EXPRESSION VARCHAR (120)  NOT NULL ,
-//    TIME_ZONE_ID VARCHAR (80)
-//);

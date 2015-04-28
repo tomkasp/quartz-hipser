@@ -1,4 +1,4 @@
-package com.tomkasp.entities;
+package com.tomkasp.entities.trigers;
 
 
 import java.io.Serializable;

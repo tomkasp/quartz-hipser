@@ -1,8 +1,8 @@
 package com.tomkasp.repository;
 
 
-import com.tomkasp.entities.QuartzTriggers;
-import com.tomkasp.entities.QuartzTriggersId;
+import com.tomkasp.entities.trigers.QuartzTriggers;
+import com.tomkasp.entities.trigers.QuartzTriggersId;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
