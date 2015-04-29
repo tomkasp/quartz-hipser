@@ -31,7 +31,10 @@ public class TriggersTest {
 
     @Test
     public void get_all_fired_triggers() {
-        //add some sort of deley
+
+        when()
+                .get("/jobdetails");
+
         when()
                 .get("/firedtriggers")
                 .then()
