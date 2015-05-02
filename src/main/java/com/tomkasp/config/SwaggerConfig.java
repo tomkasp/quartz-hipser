@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 ))
 
                         //Here we specify URI patterns which will be included in Swagger docs. Use regex for this purpose.
-                .includePatterns("/.*");
+                .includePatterns("/quartz/.*");
     }
 
 }
