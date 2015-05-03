@@ -56,4 +56,9 @@ public class Triggers {
     public List<QuartzSimpleTriggers> getAllSimpleTriggers(){
         return quartzSimpleTriggerRepository.findAll();
     }
+
+    @RequestMapping(value = "/blob", method = RequestMethod.GET)
+    public void getAllBlob{
+
+    }
 }
