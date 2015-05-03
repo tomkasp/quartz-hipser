@@ -1,5 +1,6 @@
-package com.tomkasp;
+package com.tomkasp.api;
 
+import com.tomkasp.QuartzHipsterApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -11,8 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @WebAppConfiguration
 public class QuartzHipsterApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+//	@Test
+//	public void contextLoads() {
+//	}
 
 }

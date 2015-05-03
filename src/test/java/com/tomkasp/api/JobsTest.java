@@ -33,7 +33,7 @@ public class JobsTest {
     public void get_all_jobs() {
 
         when()
-                .get("/jobdetails")
+                .get("/quartz/jobdetails")
         .then()
                 .body("schedulerName", hasItems("quartzScheduler"))
                 .body("jobName", hasItem("processMyJob"));

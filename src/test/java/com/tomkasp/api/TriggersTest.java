@@ -32,11 +32,11 @@ public class TriggersTest {
     @Test
     public void get_all_fired_triggers() {
 
+//        when()
+//                .get("/quartz/jobdetails");
+//
         when()
-                .get("/jobdetails");
-
-        when()
-                .get("/firedtriggers")
+                .get("/quartz/triggers/cron")
                 .then()
                 .body("schedulerName", hasItems("quartzScheduler"))
                 .body("triggerName", hasItem("processMyJobTrigger"));

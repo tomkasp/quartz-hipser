@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/quartz")
 public class Jobs {
 
     private final QuartzJobDetailsRepository quartzJobDetailsRepository;

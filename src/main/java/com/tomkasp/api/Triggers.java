@@ -34,31 +34,33 @@ public class Triggers {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<QuartzTriggers> getAllTriggers(){
+    public List<QuartzTriggers> getAllTriggers() {
         List<QuartzTriggers> quartzTriggers = quartzTriggersRepository.findAll();
         return quartzTriggers;
     }
 
     @ApiOperation(value = "Currently running trigger")
     @RequestMapping(value = "/fired", method = RequestMethod.GET)
-    public List<QuartzFiredTriggers> getAllFiredTriggers(){
+    public List<QuartzFiredTriggers> getAllFiredTriggers() {
         return quartzFiredTriggersRepository.findAll();
     }
 
 
     @RequestMapping(value = "/cron", method = RequestMethod.GET)
-    public List<QuartzCronTriggers> getAllCronTriggers(){
+    public List<QuartzCronTriggers> getAllCronTriggers() {
         return quartzCronTriggersRepository.findAll();
     }
 
 
     @RequestMapping(value = "/simple", method = RequestMethod.GET)
-    public List<QuartzSimpleTriggers> getAllSimpleTriggers(){
+    public List<QuartzSimpleTriggers> getAllSimpleTriggers() {
         return quartzSimpleTriggerRepository.findAll();
     }
 
     @RequestMapping(value = "/blob", method = RequestMethod.GET)
-    public void getAllBlob{
+    public String getAllBlob()
 
+    {
+        return "";
     }
 }
