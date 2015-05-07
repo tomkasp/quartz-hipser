@@ -26,17 +26,11 @@ public class TriggersConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(TriggersConfig.class);
 
-    @Autowired
-    DataSource dataSource;
+    private final SchedulerFactoryBean schedulerFactoryBean;
 
-    @Autowired
-    PlatformTransactionManager transactionManager;
-
-    @Autowired
-    ApplicationContext applicationContext;
-
-    @Autowired
-    SchedulerFactoryBean schedulerFactoryBean;
+    public TriggersConfig(SchedulerFactoryBean schedulerFactoryBean) {
+        this.schedulerFactoryBean = schedulerFactoryBean;
+    }
 
     @PostConstruct
     public void init() throws SchedulerException {
