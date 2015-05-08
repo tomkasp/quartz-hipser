@@ -8,16 +8,13 @@ import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 
 
 @Configuration
@@ -26,11 +23,13 @@ public class TriggersConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(TriggersConfig.class);
 
-    private final SchedulerFactoryBean schedulerFactoryBean;
-
-    public TriggersConfig(SchedulerFactoryBean schedulerFactoryBean) {
-        this.schedulerFactoryBean = schedulerFactoryBean;
-    }
+   @Autowired
+    SchedulerFactoryBean schedulerFactoryBean;
+//
+//    @Autowired
+//    public TriggersConfig(SchedulerFactoryBean schedulerFactoryBean) {
+//        this.schedulerFactoryBean = schedulerFactoryBean;
+//    }
 
     @PostConstruct
     public void init() throws SchedulerException {

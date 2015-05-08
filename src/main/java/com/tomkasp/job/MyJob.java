@@ -6,7 +6,6 @@ import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Service;
 
 
-@Service
 public class MyJob implements Job {
 
     @Override
