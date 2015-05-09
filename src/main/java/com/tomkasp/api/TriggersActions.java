@@ -28,29 +28,29 @@ public class TriggersActions {
 
     @RequestMapping(method = RequestMethod.PUT)
     public void updateTrigger(@RequestBody QuartzTriggers quartzTriggers) throws SchedulerException {
-        LOG.debug("Trigger to update {}", quartzTriggers);
-//        checkTriggerAndDoAction(quartzTriggers);
-//        if(Trigger.TriggerState.PAUSED quartzTriggers.getTriggerState() )
-//        LOG.info("pausing trigger with a key: {}", triggerKey);
-//        scheduler.pauseTrigger(triggerKey);
+        LOG.debug("Attempt to update trigger {}", quartzTriggers);
+        checkTriggerAndDoAction(quartzTriggers);
     }
 
-    private void checkTriggerAndDoAction(QuartzTriggers quartzTriggers) {
-//        TriggerKey triggerKey = new TriggerKey(quartzTriggers.getTriggerName(), quartzTriggers.getTriggerGroup());
-//        String triggerState = quartzTriggers.getTriggerState();
-//        if(isStateHasChanged(triggerKey, triggerState)){
-//
-//        }
-//        if(Trigger.TriggerState.PAUSED.equals(triggerState)){
-//            pauseTrigger();
-//        }
+    private void checkTriggerAndDoAction(QuartzTriggers quartzTriggers) throws SchedulerException {
+        TriggerKey triggerKey = new TriggerKey(quartzTriggers.getTriggerName(), quartzTriggers.getTriggerGroup());
+        Trigger.TriggerState triggerState = Trigger.TriggerState.valueOf(quartzTriggers.getTriggerState());
+        if (!scheduler.getTriggerState(triggerKey).equals(triggerState)) {
+            LOG.info("Trigger with an id: {} is going to be updated with a new state: {}", triggerKey, triggerState);
+            changeTriggerState(triggerKey, triggerState);
+        }
     }
 
-    private void isStateHasChanged(TriggerKey triggerKey, Trigger.TriggerState triggerState){
+    private void changeTriggerState(TriggerKey triggerKey, Trigger.TriggerState triggerState) throws SchedulerException {
+        switch (triggerState){
+            case PAUSED:
+                scheduler.pauseTrigger(triggerKey);
+                break;
+            default:
+                LOG.warn("wrong trigger state : {}", triggerState);
+                break;
 
-    }
-
-    private void pauseTrigger(){
+        }
 
     }
 }

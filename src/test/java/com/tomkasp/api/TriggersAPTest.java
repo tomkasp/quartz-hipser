@@ -1,11 +1,9 @@
 package com.tomkasp.api;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import com.tomkasp.QuartzHipsterApplication;
 import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +18,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static junit.framework.Assert.assertTrue;
@@ -38,7 +35,7 @@ public class TriggersAPTest {
 
     String triggerAsJson = "";
     String triggerGroup = "DEFAULT";
-    String triggerState = "PAUSED";
+    String triggerNewState = "PAUSED";
 
     @Autowired
     Scheduler scheduler;
@@ -61,7 +58,7 @@ public class TriggersAPTest {
                 "  \"endTime\": 0,\n" +
                 "  \"nextFireTime\": 0,\n" +
                 "  \"schedulerName\": \"string\",\n" +
-                "  \"triggerState\": \"" + triggerState + "\",\n" +
+                "  \"triggerState\": \"" + triggerNewState + "\",\n" +
                 "  \"priority\": 0,\n" +
                 "  \"startTime\": 0,\n" +
                 "  \"description\": \"string\",\n" +
