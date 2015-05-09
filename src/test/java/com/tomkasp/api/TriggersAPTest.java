@@ -58,28 +58,6 @@ public class TriggersAPTest {
                 .triggerName(TriggersConfig.TRIGGER_NAME)
                 .triggerGroup(triggerGroup)
                 .triggerState(triggerNewState);
-
-        //TODO create object and convert it to JSON STRing
-//        triggerAsJson = "{\n" +
-//                "  \"jobName\": \"string\",\n" +
-//                "  \"jobGroup\": \"string\",\n" +
-//                "  \"jobDate\": [\n" +
-//                "    null\n" +
-//                "  ],\n" +
-//                "  \"prevFireTime\": 0,\n" +
-//                "  \"triggerType\": \"string\",\n" +
-//                "  \"misfireInstr\": 0,\n" +
-//                "  \"triggerName\": \"" + TriggersConfig.TRIGGER_NAME + "\",\n" +
-//                "  \"triggerGroup\": \"" + triggerGroup + "\",\n" +
-//                "  \"endTime\": 0,\n" +
-//                "  \"nextFireTime\": 0,\n" +
-//                "  \"schedulerName\": \"string\",\n" +
-//                "  \"triggerState\": \"" + triggerNewState + "\",\n" +
-//                "  \"priority\": 0,\n" +
-//                "  \"startTime\": 0,\n" +
-//                "  \"description\": \"string\",\n" +
-//                "  \"calendarName\": \"string\"\n" +
-//                "}";
     }
 
 
