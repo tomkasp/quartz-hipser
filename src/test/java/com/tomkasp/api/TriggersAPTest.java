@@ -60,34 +60,53 @@ public class TriggersAPTest {
                 .triggerState(triggerNewState);
     }
 
-
     @Test
     public void get_all_fired_triggers() {
-
         when()
                 .get("/quartz/triggers/cron")
                 .then()
                 .body("schedulerName", hasItems(QuartzConfig.SCHEDULER_NAME))
                 .body("triggerName", hasItem(TriggersConfig.TRIGGER_NAME));
-
     }
 
     @Test
     public void pause_trigger() throws SchedulerException, JsonProcessingException {
         pauseTrigger();
-        assureTriggerIsPaused();
+        assuredTriggerIsPaused();
     }
-
-
 
     @Test
     public void resume_trigger() throws SchedulerException, JsonProcessingException {
         pauseTrigger();
-        assureTriggerIsPaused();
+        assuredTriggerIsPaused();
+
+        //change trigger state to NORMAL - it means resume
         triggerNewState = Trigger.TriggerState.NORMAL.toString();
         quartzTriggers.triggerState(triggerNewState);
         String messageBody = objectMapper.writeValueAsString(quartzTriggers);
         LOG.info("Trigger json to resume : {}", messageBody);
+
+        given()
+                .contentType("application/json")
+                .body(messageBody)
+        .when()
+                .put("/quartz/triggers")
+        .then()
+                .statusCode(200);
+
+        //Confirm request
+        Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
+        assertTrue(triggerState.equals(Trigger.TriggerState.NORMAL));
+    }
+
+    @Test
+    public void incorrect_trigger_status_value() throws JsonProcessingException {
+        //change trigger state to NORMAL - it means resume
+        triggerNewState = "incorrect state value";
+        quartzTriggers.triggerState(triggerNewState);
+        String messageBody = objectMapper.writeValueAsString(quartzTriggers);
+        LOG.info("Trigger json to resume : {}", messageBody);
+
         given()
                 .contentType("application/json")
                 .body(messageBody)
@@ -95,12 +114,9 @@ public class TriggersAPTest {
                 .put("/quartz/triggers")
                 .then()
                 .statusCode(200);
-
-        Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
-        assertTrue(triggerState.equals(Trigger.TriggerState.NORMAL));
     }
 
-    private void assureTriggerIsPaused() throws SchedulerException {
+    private void assuredTriggerIsPaused() throws SchedulerException {
         Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
         assertTrue(triggerState.equals(Trigger.TriggerState.PAUSED));
     }

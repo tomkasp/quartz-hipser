@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/quartz/triggers")
 public class TriggersActions {
@@ -27,7 +29,7 @@ public class TriggersActions {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateTrigger(@RequestBody QuartzTriggers quartzTriggers) throws SchedulerException {
+    public void updateTrigger(@Valid @RequestBody QuartzTriggers quartzTriggers) throws SchedulerException {
         LOG.debug("Attempt to update trigger {}", quartzTriggers);
         checkTriggerAndDoAction(quartzTriggers);
     }
