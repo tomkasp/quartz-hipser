@@ -1,9 +1,12 @@
 package com.tomkasp.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
 import com.tomkasp.QuartzHipsterApplication;
 import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
+import com.tomkasp.entities.trigers.QuartzTriggers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +14,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
@@ -30,12 +35,16 @@ import static org.hamcrest.CoreMatchers.hasItems;
 @IntegrationTest("server.port:0")
 public class TriggersAPTest {
 
+    static final Logger LOG = LoggerFactory.getLogger(TriggersAPTest.class);
+
     @Value("${local.server.port}")
     int port;
 
-    String triggerAsJson = "";
     String triggerGroup = "DEFAULT";
-    String triggerNewState = "PAUSED";
+    String triggerNewState = Trigger.TriggerState.PAUSED.toString();
+
+    QuartzTriggers quartzTriggers;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     Scheduler scheduler;
@@ -44,26 +53,33 @@ public class TriggersAPTest {
     public void setUp() {
         RestAssured.port = port;
 
-        triggerAsJson = "{\n" +
-                "  \"jobName\": \"string\",\n" +
-                "  \"jobGroup\": \"string\",\n" +
-                "  \"jobDate\": [\n" +
-                "    null\n" +
-                "  ],\n" +
-                "  \"prevFireTime\": 0,\n" +
-                "  \"triggerType\": \"string\",\n" +
-                "  \"misfireInstr\": 0,\n" +
-                "  \"triggerName\": \"" + TriggersConfig.TRIGGER_NAME + "\",\n" +
-                "  \"triggerGroup\": \"" + triggerGroup + "\",\n" +
-                "  \"endTime\": 0,\n" +
-                "  \"nextFireTime\": 0,\n" +
-                "  \"schedulerName\": \"string\",\n" +
-                "  \"triggerState\": \"" + triggerNewState + "\",\n" +
-                "  \"priority\": 0,\n" +
-                "  \"startTime\": 0,\n" +
-                "  \"description\": \"string\",\n" +
-                "  \"calendarName\": \"string\"\n" +
-                "}";
+        quartzTriggers = new QuartzTriggers()
+                .schedulerName(QuartzConfig.SCHEDULER_NAME)
+                .triggerName(TriggersConfig.TRIGGER_NAME)
+                .triggerGroup(triggerGroup)
+                .triggerState(triggerNewState);
+
+        //TODO create object and convert it to JSON STRing
+//        triggerAsJson = "{\n" +
+//                "  \"jobName\": \"string\",\n" +
+//                "  \"jobGroup\": \"string\",\n" +
+//                "  \"jobDate\": [\n" +
+//                "    null\n" +
+//                "  ],\n" +
+//                "  \"prevFireTime\": 0,\n" +
+//                "  \"triggerType\": \"string\",\n" +
+//                "  \"misfireInstr\": 0,\n" +
+//                "  \"triggerName\": \"" + TriggersConfig.TRIGGER_NAME + "\",\n" +
+//                "  \"triggerGroup\": \"" + triggerGroup + "\",\n" +
+//                "  \"endTime\": 0,\n" +
+//                "  \"nextFireTime\": 0,\n" +
+//                "  \"schedulerName\": \"string\",\n" +
+//                "  \"triggerState\": \"" + triggerNewState + "\",\n" +
+//                "  \"priority\": 0,\n" +
+//                "  \"startTime\": 0,\n" +
+//                "  \"description\": \"string\",\n" +
+//                "  \"calendarName\": \"string\"\n" +
+//                "}";
     }
 
 
@@ -79,18 +95,45 @@ public class TriggersAPTest {
     }
 
     @Test
-    public void pause_trigger() throws SchedulerException {
+    public void pause_trigger() throws SchedulerException, JsonProcessingException {
+        pauseTrigger();
+        assureTriggerIsPaused();
+    }
 
+
+
+    @Test
+    public void resume_trigger() throws SchedulerException, JsonProcessingException {
+        pauseTrigger();
+        assureTriggerIsPaused();
+        triggerNewState = Trigger.TriggerState.NORMAL.toString();
+        quartzTriggers.triggerState(triggerNewState);
+        String messageBody = objectMapper.writeValueAsString(quartzTriggers);
+        LOG.info("Trigger json to resume : {}", messageBody);
         given()
                 .contentType("application/json")
-                .body(triggerAsJson)
-        .when()
+                .body(messageBody)
+                .when()
                 .put("/quartz/triggers")
-        .then()
+                .then()
                 .statusCode(200);
 
+        Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
+        assertTrue(triggerState.equals(Trigger.TriggerState.NORMAL));
+    }
+
+    private void assureTriggerIsPaused() throws SchedulerException {
         Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
         assertTrue(triggerState.equals(Trigger.TriggerState.PAUSED));
     }
 
+    private void pauseTrigger() throws JsonProcessingException {
+        given()
+                .contentType("application/json")
+                .body(objectMapper.writeValueAsString(quartzTriggers))
+        .when()
+                .put("/quartz/triggers")
+        .then()
+                .statusCode(200);
+    }
 }

@@ -46,6 +46,9 @@ public class TriggersActions {
             case PAUSED:
                 scheduler.pauseTrigger(triggerKey);
                 break;
+            case NORMAL:
+                scheduler.resumeTrigger(triggerKey);
+                break;
             default:
                 LOG.warn("wrong trigger state : {}", triggerState);
                 break;
