@@ -22,17 +22,17 @@ import javax.annotation.PostConstruct;
 public class TriggersConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(TriggersConfig.class);
+    public static final String TRIGGER_NAME = "processMyJobTrigger";
 
-   @Autowired
+    @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
-//
-//    @Autowired
-//    public TriggersConfig(SchedulerFactoryBean schedulerFactoryBean) {
-//        this.schedulerFactoryBean = schedulerFactoryBean;
-//    }
+
+    @Autowired
+    GlobalSchedulerListener globalSchedulerListener;
 
     @PostConstruct
     public void init() throws SchedulerException {
+        schedulerFactoryBean.getObject().getListenerManager().addSchedulerListener(globalSchedulerListener);
         Trigger trigger = processMyJobTrigger().getObject();
         JobDetail job = processMyJob().getObject();
         schedulerFactoryBean.getObject().scheduleJob(job, trigger);
@@ -52,6 +52,8 @@ public class TriggersConfig {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
         cronTriggerFactoryBean.setJobDetail(processMyJob().getObject());
         cronTriggerFactoryBean.setCronExpression("0 0/1 * * * ?");
+        cronTriggerFactoryBean.getObject();
+        cronTriggerFactoryBean.setName(TRIGGER_NAME);
         return cronTriggerFactoryBean;
     }
 }
