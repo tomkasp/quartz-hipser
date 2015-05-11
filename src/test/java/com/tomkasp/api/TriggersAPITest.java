@@ -110,13 +110,11 @@ public class TriggersAPITest {
         given()
                 .contentType("application/json")
                 .body(messageBody)
-                .when()
+        .when()
                 .put("/quartz/triggers")
-                .then()
-                .statusCode(200);
+        .then()
+                .statusCode(400);
     }
-
-
 
     private void assuredTriggerIsPaused() throws SchedulerException {
         Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
