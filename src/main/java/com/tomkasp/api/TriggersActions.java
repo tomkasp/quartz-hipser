@@ -36,11 +36,16 @@ public class TriggersActions {
 
     private void checkTriggerAndDoAction(QuartzTriggers quartzTriggers) throws SchedulerException {
         TriggerKey triggerKey = new TriggerKey(quartzTriggers.getTriggerName(), quartzTriggers.getTriggerGroup());
-        Trigger.TriggerState triggerState = Trigger.TriggerState.valueOf(quartzTriggers.getTriggerState());
-        if (!scheduler.getTriggerState(triggerKey).equals(triggerState)) {
-            LOG.info("Trigger with an id: {} is going to be updated with a new state: {}", triggerKey, triggerState);
-            changeTriggerState(triggerKey, triggerState);
+        Trigger.TriggerState newTriggerState = Trigger.TriggerState.valueOf(quartzTriggers.getTriggerState());
+        if (isStateToUpdate(newTriggerState, triggerKey)) {
+            LOG.info("Trigger with an id: {} is going to be updated with a new state: {}", triggerKey, newTriggerState);
+            changeTriggerState(triggerKey, newTriggerState);
         }
+    }
+
+    private Boolean isStateToUpdate(Trigger.TriggerState newTriggerState , TriggerKey triggerKey) throws SchedulerException {
+        //new State is not equals to current state - we need to update
+        return !scheduler.getTriggerState(triggerKey).equals(newTriggerState);
     }
 
     private void changeTriggerState(TriggerKey triggerKey, Trigger.TriggerState triggerState) throws SchedulerException {

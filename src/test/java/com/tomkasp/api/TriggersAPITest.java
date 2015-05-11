@@ -33,9 +33,9 @@ import static org.hamcrest.CoreMatchers.hasItems;
 @SpringApplicationConfiguration(classes = QuartzHipsterApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class TriggersAPTest {
+public class TriggersAPITest {
 
-    static final Logger LOG = LoggerFactory.getLogger(TriggersAPTest.class);
+    static final Logger LOG = LoggerFactory.getLogger(TriggersAPITest.class);
 
     @Value("${local.server.port}")
     int port;
@@ -115,6 +115,8 @@ public class TriggersAPTest {
                 .then()
                 .statusCode(200);
     }
+
+
 
     private void assuredTriggerIsPaused() throws SchedulerException {
         Trigger.TriggerState triggerState = scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup));
