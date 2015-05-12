@@ -6,14 +6,13 @@ import com.jayway.restassured.RestAssured;
 import com.tomkasp.QuartzHipsterApplication;
 import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
+import com.tomkasp.entities.trigers.QuartzCronTriggers;
 import com.tomkasp.entities.trigers.QuartzTriggers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerKey;
+import org.quartz.*;
+import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,8 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.text.ParseException;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
@@ -44,6 +45,7 @@ public class TriggersAPITest {
     String triggerNewState = Trigger.TriggerState.PAUSED.toString();
 
     QuartzTriggers quartzTriggers;
+    QuartzCronTriggers quartzCronTriggers;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -58,6 +60,12 @@ public class TriggersAPITest {
                 .triggerName(TriggersConfig.TRIGGER_NAME)
                 .triggerGroup(triggerGroup)
                 .triggerState(triggerNewState);
+
+        quartzCronTriggers = new QuartzCronTriggers()
+                .schedulerName(QuartzConfig.SCHEDULER_NAME)
+                .triggerName(TriggersConfig.TRIGGER_NAME)
+                .triggerGroup(triggerGroup)
+                .cronExpression(TriggersConfig.CRON_EXPRESSION);
     }
 
     @Test
@@ -89,9 +97,9 @@ public class TriggersAPITest {
         given()
                 .contentType("application/json")
                 .body(messageBody)
-        .when()
+                .when()
                 .put("/quartz/triggers")
-        .then()
+                .then()
                 .statusCode(200);
 
         //Confirm request
@@ -110,10 +118,30 @@ public class TriggersAPITest {
         given()
                 .contentType("application/json")
                 .body(messageBody)
-        .when()
+                .when()
                 .put("/quartz/triggers")
-        .then()
-                .statusCode(400);
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    public void reschedule_cron_trigger() throws SchedulerException, JsonProcessingException, ParseException {
+        final TriggerKey triggerKey = new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup);
+        final String cronExpression = "1 0/1 * * * ?";
+        String triggerJSON = objectMapper.writeValueAsString(quartzCronTriggers);
+        LOG.info("Trigger to reschedule : {}", triggerJSON);
+
+        given()
+                .contentType("application/json")
+                .body(triggerJSON)
+        .when()
+                .put("/quartz/crontriggers")
+                .then()
+        .statusCode(200);
+
+        CronTriggerImpl triggerAfterCronExpressionUpdate = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
+        assertTrue(cronExpression.equals(triggerAfterCronExpressionUpdate.getCronExpression()));
+
     }
 
     private void assuredTriggerIsPaused() throws SchedulerException {
@@ -125,9 +153,9 @@ public class TriggersAPITest {
         given()
                 .contentType("application/json")
                 .body(objectMapper.writeValueAsString(quartzTriggers))
-        .when()
+                .when()
                 .put("/quartz/triggers")
-        .then()
+                .then()
                 .statusCode(200);
     }
 }

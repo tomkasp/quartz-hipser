@@ -23,6 +23,7 @@ public class TriggersConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(TriggersConfig.class);
     public static final String TRIGGER_NAME = "processMyJobTrigger";
+    public static final String CRON_EXPRESSION = "0 0/1 * * * ?";
 
     @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
@@ -51,7 +52,7 @@ public class TriggersConfig {
     public CronTriggerFactoryBean processMyJobTrigger() {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
         cronTriggerFactoryBean.setJobDetail(processMyJob().getObject());
-        cronTriggerFactoryBean.setCronExpression("0 0/1 * * * ?");
+        cronTriggerFactoryBean.setCronExpression(CRON_EXPRESSION);
         cronTriggerFactoryBean.getObject();
         cronTriggerFactoryBean.setName(TRIGGER_NAME);
         return cronTriggerFactoryBean;

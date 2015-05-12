@@ -1,5 +1,6 @@
 package com.tomkasp.api;
 
+import com.tomkasp.entities.trigers.QuartzCronTriggers;
 import com.tomkasp.entities.trigers.QuartzTriggers;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -17,14 +18,14 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/quartz/triggers")
-public class TriggersActions {
+public class TriggersApi {
 
-    static final Logger LOG = LoggerFactory.getLogger(TriggersActions.class);
+    static final Logger LOG = LoggerFactory.getLogger(TriggersApi.class);
 
     private final Scheduler scheduler;
 
     @Autowired
-    public TriggersActions(Scheduler scheduler) {
+    public TriggersApi(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
 
@@ -43,13 +44,13 @@ public class TriggersActions {
         }
     }
 
-    private Boolean isStateToUpdate(Trigger.TriggerState newTriggerState , TriggerKey triggerKey) throws SchedulerException {
+    private Boolean isStateToUpdate(Trigger.TriggerState newTriggerState, TriggerKey triggerKey) throws SchedulerException {
         //new State is not equals to current state - we need to update
         return !scheduler.getTriggerState(triggerKey).equals(newTriggerState);
     }
 
     private void changeTriggerState(TriggerKey triggerKey, Trigger.TriggerState triggerState) throws SchedulerException {
-        switch (triggerState){
+        switch (triggerState) {
             case PAUSED:
                 scheduler.pauseTrigger(triggerKey);
                 break;
