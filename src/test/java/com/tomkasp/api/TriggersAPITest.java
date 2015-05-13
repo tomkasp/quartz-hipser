@@ -121,13 +121,14 @@ public class TriggersAPITest {
                 .when()
                 .put("/quartz/triggers")
                 .then()
-                .statusCode(200);
+                .statusCode(400);
     }
 
     @Test
     public void reschedule_cron_trigger() throws SchedulerException, JsonProcessingException, ParseException {
         final TriggerKey triggerKey = new TriggerKey(TriggersConfig.TRIGGER_NAME, triggerGroup);
         final String cronExpression = "1 0/1 * * * ?";
+        quartzCronTriggers.setCronExpression(cronExpression);
         String triggerJSON = objectMapper.writeValueAsString(quartzCronTriggers);
         LOG.info("Trigger to reschedule : {}", triggerJSON);
 
@@ -141,7 +142,6 @@ public class TriggersAPITest {
 
         CronTriggerImpl triggerAfterCronExpressionUpdate = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
         assertTrue(cronExpression.equals(triggerAfterCronExpressionUpdate.getCronExpression()));
-
     }
 
     private void assuredTriggerIsPaused() throws SchedulerException {
