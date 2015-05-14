@@ -1,6 +1,5 @@
-package com.tomkasp.api;
+package com.tomkasp.api.trigger;
 
-import com.tomkasp.entities.trigers.QuartzCronTriggers;
 import com.tomkasp.entities.trigers.QuartzTriggers;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;

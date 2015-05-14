@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -50,6 +51,9 @@ public class TriggersAPITest {
 
     @Autowired
     Scheduler scheduler;
+
+    @Autowired
+    ApplicationContext applicationContext;
 
     @Before
     public void setUp() {
@@ -142,6 +146,23 @@ public class TriggersAPITest {
 
         CronTriggerImpl triggerAfterCronExpressionUpdate = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
         assertTrue(cronExpression.equals(triggerAfterCronExpressionUpdate.getCronExpression()));
+    }
+
+    @Test
+    public void create_cron_trigger() throws JsonProcessingException {
+
+        QuartzCronTriggers quartzCronTriggers = new QuartzCronTriggers();
+        String triggerJSON = objectMapper.writeValueAsString(quartzCronTriggers);
+
+        given()
+                .contentType("application/json")
+                .body(triggerJSON)
+        .when()
+                .post("/quartz/crontriggers")
+        .then()
+                .statusCode(200);
+
+        applicationContext.getBean("tomaszBean");
     }
 
     private void assuredTriggerIsPaused() throws SchedulerException {
