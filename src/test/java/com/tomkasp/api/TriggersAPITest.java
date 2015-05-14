@@ -8,10 +8,15 @@ import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
 import com.tomkasp.entities.trigers.QuartzCronTriggers;
 import com.tomkasp.entities.trigers.QuartzTriggers;
+import com.tomkasp.entities.trigers.QuartzTriggersId;
+import com.tomkasp.repository.QuartzCronTriggersRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.*;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -53,7 +57,7 @@ public class TriggersAPITest {
     Scheduler scheduler;
 
     @Autowired
-    ApplicationContext applicationContext;
+    QuartzCronTriggersRepository quartzCronTriggersRepository;
 
     @Before
     public void setUp() {
@@ -139,10 +143,10 @@ public class TriggersAPITest {
         given()
                 .contentType("application/json")
                 .body(triggerJSON)
-        .when()
+                .when()
                 .put("/quartz/crontriggers")
                 .then()
-        .statusCode(200);
+                .statusCode(200);
 
         CronTriggerImpl triggerAfterCronExpressionUpdate = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
         assertTrue(cronExpression.equals(triggerAfterCronExpressionUpdate.getCronExpression()));
@@ -151,18 +155,23 @@ public class TriggersAPITest {
     @Test
     public void create_cron_trigger() throws JsonProcessingException {
 
-        QuartzCronTriggers quartzCronTriggers = new QuartzCronTriggers();
+        quartzCronTriggers.setTriggerName("tomasz");
         String triggerJSON = objectMapper.writeValueAsString(quartzCronTriggers);
 
         given()
                 .contentType("application/json")
                 .body(triggerJSON)
-        .when()
+                .when()
                 .post("/quartz/crontriggers")
-        .then()
+                .then()
                 .statusCode(200);
 
-        applicationContext.getBean("tomaszBean");
+        final QuartzTriggersId quartzTriggersId = new QuartzTriggersId();
+        quartzTriggersId.setSchedulerName(QuartzConfig.SCHEDULER_NAME);
+        quartzTriggersId.setTriggerGroup(triggerGroup);
+        quartzTriggersId.setTriggerName("tomasz");
+        quartzCronTriggersRepository.findOne(quartzTriggersId);
+
     }
 
     private void assuredTriggerIsPaused() throws SchedulerException {
