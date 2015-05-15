@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping(value = "/quartz/crontriggers")
+@RequestMapping(value = "/quartz/triggers/cron")
 public class CronTriggersApi {
 
     static final Logger LOG = LoggerFactory.getLogger(CronTriggersApi.class);

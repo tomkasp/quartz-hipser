@@ -31,6 +31,8 @@ import java.text.ParseException;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -144,7 +146,7 @@ public class TriggersAPITest {
                 .contentType("application/json")
                 .body(triggerJSON)
                 .when()
-                .put("/quartz/crontriggers")
+                .put("/quartz/triggers/cron")
                 .then()
                 .statusCode(200);
 
@@ -154,24 +156,37 @@ public class TriggersAPITest {
 
     @Test
     public void create_cron_trigger() throws JsonProcessingException {
-
-        quartzCronTriggers.setTriggerName("tomasz");
+        final String newTriggerName = "newTrigger";
+        quartzCronTriggers.setTriggerName(newTriggerName);
         String triggerJSON = objectMapper.writeValueAsString(quartzCronTriggers);
-
         given()
                 .contentType("application/json")
                 .body(triggerJSON)
                 .when()
-                .post("/quartz/crontriggers")
+                .post("/quartz/triggers/cron")
                 .then()
                 .statusCode(200);
 
         final QuartzTriggersId quartzTriggersId = new QuartzTriggersId();
         quartzTriggersId.setSchedulerName(QuartzConfig.SCHEDULER_NAME);
         quartzTriggersId.setTriggerGroup(triggerGroup);
-        quartzTriggersId.setTriggerName("tomasz");
-        quartzCronTriggersRepository.findOne(quartzTriggersId);
+        quartzTriggersId.setTriggerName(newTriggerName);
+        assertNotNull(quartzCronTriggersRepository.findOne(quartzTriggersId));
+    }
 
+    @Test
+    public void delete_trigger(){
+        given()
+                .contentType("application/json")
+                .when()
+                .delete("/quartz/triggers/cron/" + triggerGroup + "/" + TriggersConfig.TRIGGER_NAME)
+                .then()
+                .statusCode(200);
+        final QuartzTriggersId quartzTriggersId = new QuartzTriggersId();
+        quartzTriggersId.setSchedulerName(QuartzConfig.SCHEDULER_NAME);
+        quartzTriggersId.setTriggerGroup(triggerGroup);
+        quartzTriggersId.setTriggerName(TriggersConfig.TRIGGER_NAME);
+        assertNull(quartzCronTriggersRepository.findOne(quartzTriggersId));
     }
 
     private void assuredTriggerIsPaused() throws SchedulerException {
