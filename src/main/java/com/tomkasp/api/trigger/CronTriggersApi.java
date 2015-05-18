@@ -9,10 +9,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -45,14 +42,13 @@ public class CronTriggersApi {
     public void createCronTrigger(@RequestBody QuartzCronTriggers quartzCronTriggers) throws SchedulerException, ParseException {
         LOG.debug("Attempt to create cron trigger {}", quartzCronTriggers);
         quartzCronTriggersRepository.save(quartzCronTriggers);
-
-
-
-
-
-
     }
 
-
+    @RequestMapping(value = "/{triggergroup}/{triggername}", method = RequestMethod.DELETE)
+    public void deleteCronTrigger(@PathVariable String triggername, @PathVariable String triggergroup) throws SchedulerException {
+        TriggerKey triggerKey = new TriggerKey(triggername, triggergroup);
+        scheduler.unscheduleJob(triggerKey);
+        LOG.debug("Attempt to delete cron trigger {}", triggerKey);
+    }
 
 }
