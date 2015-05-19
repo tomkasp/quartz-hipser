@@ -23,6 +23,7 @@ public class TriggersConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(TriggersConfig.class);
     public static final String TRIGGER_NAME = "processMyJobTrigger";
+    public static final String JOB_NAME = "processMyJob";
     public static final String CRON_EXPRESSION = "0 0/1 * * * ?";
 
     @Autowired
@@ -43,6 +44,7 @@ public class TriggersConfig {
     public JobDetailFactoryBean processMyJob() {
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(MyJob.class);
+        jobDetailFactory.setName(JOB_NAME);
         jobDetailFactory.setDurability(true);
         return jobDetailFactory;
     }
