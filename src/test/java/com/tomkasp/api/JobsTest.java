@@ -6,6 +6,7 @@ import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
 import com.tomkasp.entities.QuartzJobDetailsId;
 import com.tomkasp.repository.QuartzJobDetailsRepository;
+import com.tomkasp.repository.QuartzPausedTriggersRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,9 @@ public class JobsTest {
     @Autowired
     QuartzJobDetailsRepository quartzJobDetailsRepository;
 
+    @Autowired
+    QuartzPausedTriggersRepository quartzPausedTriggersRepository;
+
     @Before
     public void setUp() {
         RestAssured.port = port;
@@ -60,11 +64,14 @@ public class JobsTest {
         quartzJobDetailsId.setSchedulerName(QuartzConfig.SCHEDULER_NAME);
         quartzJobDetailsId.setJobGroup(JOB_GROUP);
         quartzJobDetailsId.setJobName(TriggersConfig.JOB_NAME);
-
         assertNull(quartzJobDetailsRepository.findOne(quartzJobDetailsId));
     }
 
     public void pause_job(){
+        when()
+                .delete("/quartz/jobs/" + JOB_GROUP + "/" + TriggersConfig.JOB_NAME)
+                .then()
+                .statusCode(RestApiHttpStatus.OK.getStatusCode());
 
     }
 
