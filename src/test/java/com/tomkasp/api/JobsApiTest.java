@@ -5,11 +5,16 @@ import com.tomkasp.QuartzHipsterApplication;
 import com.tomkasp.config.QuartzConfig;
 import com.tomkasp.config.TriggersConfig;
 import com.tomkasp.entities.QuartzJobDetailsId;
+import com.tomkasp.entities.trigers.QuartzPausedTriggersId;
 import com.tomkasp.repository.QuartzJobDetailsRepository;
 import com.tomkasp.repository.QuartzPausedTriggersRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
@@ -20,18 +25,25 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import static com.jayway.restassured.RestAssured.when;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = QuartzHipsterApplication.class)
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-public class JobsTest {
+public class JobsApiTest {
 
     @Value("${local.server.port}")
     int port;
 
     public final String JOB_GROUP = "DEFAULT";
+    public final String TRIGGER_GROUP = "DEFAULT";
+
+
+    @Autowired
+    Scheduler scheduler;
 
     @Autowired
     QuartzJobDetailsRepository quartzJobDetailsRepository;
@@ -49,13 +61,13 @@ public class JobsTest {
 
         when()
                 .get("/quartz/jobdetails")
-        .then()
+                .then()
                 .body("schedulerName", hasItems("quartzScheduler"))
                 .body("jobName", hasItem("processMyJob"));
     }
 
     @Test
-    public void delete_job(){
+    public void delete_job() {
         when()
                 .delete("/quartz/jobs/" + JOB_GROUP + "/" + TriggersConfig.JOB_NAME)
                 .then()
@@ -67,27 +79,30 @@ public class JobsTest {
         assertNull(quartzJobDetailsRepository.findOne(quartzJobDetailsId));
     }
 
-    public void pause_job(){
+    @Test
+    public void pause_job() throws SchedulerException {
         when()
-                .delete("/quartz/jobs/" + JOB_GROUP + "/" + TriggersConfig.JOB_NAME)
+                .put("/quartz/jobs/" + JOB_GROUP + "/" + TriggersConfig.JOB_NAME + "/pause")
                 .then()
                 .statusCode(RestApiHttpStatus.OK.getStatusCode());
 
-    }
-
-    public void pause_jobs(){
+        assertEquals(scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, TRIGGER_GROUP)), Trigger.TriggerState.PAUSED);
 
     }
 
-    public void schedule_job(){
+    public void pause_jobs() {
 
     }
 
-    public void add_job(){
+    public void schedule_job() {
 
     }
 
-    public void check_if_job_exists(){
+    public void add_job() {
+
+    }
+
+    public void check_if_job_exists() {
 
     }
 
