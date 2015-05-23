@@ -85,13 +85,30 @@ public class JobsApiTest {
                 .put("/quartz/jobs/" + JOB_GROUP + "/" + TriggersConfig.JOB_NAME + "/pause")
                 .then()
                 .statusCode(RestApiHttpStatus.OK.getStatusCode());
-
         assertEquals(scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, TRIGGER_GROUP)), Trigger.TriggerState.PAUSED);
-
     }
 
-    public void pause_jobs() {
+    @Test
+    public void pause_jobs() throws SchedulerException {
+        pauseAllJobs();
+        assertEquals(Trigger.TriggerState.PAUSED, scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, TRIGGER_GROUP)));
+    }
 
+    @Test
+    public void resume_all_jobs() throws SchedulerException {
+        pauseAllJobs();
+        when()
+                .delete("/quartz/jobs/pause")
+                .then()
+                .statusCode(RestApiHttpStatus.OK.getStatusCode());
+        assertEquals(Trigger.TriggerState.NORMAL, scheduler.getTriggerState(new TriggerKey(TriggersConfig.TRIGGER_NAME, TRIGGER_GROUP)));
+    }
+
+    private void pauseAllJobs() {
+        when()
+                .put("/quartz/jobs/pause" )
+                .then()
+                .statusCode(RestApiHttpStatus.OK.getStatusCode());
     }
 
     public void schedule_job() {

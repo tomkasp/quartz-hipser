@@ -32,17 +32,14 @@ public class JobApi {
         scheduler.deleteJob(jobKey);
     }
 
-    //returns job
     @RequestMapping(value = "/{jobgroup}/{jobname}", method = RequestMethod.GET)
     public JobDetail getJob(@PathVariable String jobgroup, @PathVariable String jobname) throws SchedulerException {
         JobKey jobKey = new JobKey(jobname, jobgroup);
         return scheduler.getJobDetail(jobKey);
     }
 
-    //returns job
     @RequestMapping(value = "/{jobgroup}/{jobname}/paused", method = RequestMethod.GET)
     public void getPausedInfo() {
-//            scheduler.pauseJob();
     }
 
     @RequestMapping(value = "/{jobgroup}/{jobname}/pause", method = RequestMethod.PUT)
@@ -57,4 +54,15 @@ public class JobApi {
         JobKey jobKey = new JobKey(jobname, jobgroup);
         scheduler.resumeJob(jobKey);
     }
+
+    @RequestMapping(value = "/pause", method = RequestMethod.PUT)
+    public void pauseAll() throws SchedulerException {
+        scheduler.pauseAll();
+    }
+
+    @RequestMapping(value = "/pause", method = RequestMethod.DELETE)
+    public void resumeAll() throws SchedulerException {
+        scheduler.resumeAll();
+    }
+
 }
