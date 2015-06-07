@@ -1,0 +1,8 @@
+spring:
+    datasource:
+        dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
+        url:
+        databaseName: quartzui
+        serverName: localhost
+        username: quartzui
+        password: builder

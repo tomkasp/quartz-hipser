@@ -24,6 +24,7 @@
         <start-class>com.tomkasp.QuartzHipsterApplication</start-class>
         <java.version>1.7</java.version>
         <postgresql.version>9.3-1102-jdbc41</postgresql.version>
+        <HikariCP.version>2.3.5</HikariCP.version>
     </properties>
 
     <dependencies>
@@ -47,6 +48,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
+
+        <!--DATA SOURCE config -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP-java6</artifactId>
+            <version>${HikariCP.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>tools</artifactId>
+                    <groupId>com.sun</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>com.h2database</groupId>-->
             <!--<artifactId>h2</artifactId>-->
