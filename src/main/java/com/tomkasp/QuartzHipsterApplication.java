@@ -8,7 +8,11 @@ public class QuartzHipsterApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(QuartzHipsterApplication.class, args);
+        SpringApplication app = new SpringApplication(QuartzHipsterApplication.class);
+
+        app.run(args);
+
+//        SpringApplication.run(QuartzHipsterApplication.class, args);
     }
 
 }
