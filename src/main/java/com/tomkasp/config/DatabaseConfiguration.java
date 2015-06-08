@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
@@ -26,6 +27,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
     private Environment env;
 
     @Bean
+    @Profile(value = Constants.SPRING_PROFILE_DEVELOPMENT)
     public DataSource dataSource(){
         log.debug("Configuring Datasource");
         if (propertyResolver.getProperty("url") == null && propertyResolver.getProperty("databaseName") == null) {
