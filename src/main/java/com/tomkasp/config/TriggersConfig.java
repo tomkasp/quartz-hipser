@@ -37,7 +37,10 @@ public class TriggersConfig {
         schedulerFactoryBean.getObject().getListenerManager().addSchedulerListener(globalSchedulerListener);
         Trigger trigger = processMyJobTrigger().getObject();
         JobDetail job = processMyJob().getObject();
-        schedulerFactoryBean.getObject().scheduleJob(job, trigger);
+
+        if(schedulerFactoryBean.getScheduler().getTrigger(trigger.getKey()) == null){
+            schedulerFactoryBean.getObject().scheduleJob(job, trigger);
+        }
     }
 
     @Bean
