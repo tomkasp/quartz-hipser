@@ -1,6 +1,5 @@
 package com.tomkasp.api;
 
-
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -64,5 +63,4 @@ public class JobApi {
     public void resumeAll() throws SchedulerException {
         scheduler.resumeAll();
     }
-
 }
