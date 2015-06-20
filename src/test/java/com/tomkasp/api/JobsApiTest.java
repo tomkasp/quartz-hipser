@@ -38,6 +38,9 @@ public class JobsApiTest {
     @Value("${local.server.port}")
     int port;
 
+    @Value("${org.quartz.scheduler.name}")
+    String schedulerName;
+
     public final String JOB_GROUP = "DEFAULT";
     public final String TRIGGER_GROUP = "DEFAULT";
 
@@ -73,7 +76,7 @@ public class JobsApiTest {
                 .then()
                 .statusCode(RestApiHttpStatus.OK.getStatusCode());
         QuartzJobDetailsId quartzJobDetailsId = new QuartzJobDetailsId();
-        quartzJobDetailsId.setSchedulerName(QuartzConfig.SCHEDULER_NAME);
+        quartzJobDetailsId.setSchedulerName(schedulerName);
         quartzJobDetailsId.setJobGroup(JOB_GROUP);
         quartzJobDetailsId.setJobName(TriggersConfig.JOB_NAME);
         assertNull(quartzJobDetailsRepository.findOne(quartzJobDetailsId));

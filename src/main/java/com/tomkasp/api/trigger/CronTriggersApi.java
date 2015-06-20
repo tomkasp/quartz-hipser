@@ -31,18 +31,13 @@ public class CronTriggersApi {
     @RequestMapping(method = RequestMethod.PUT)
     public void updateCronTrigger(@RequestBody QuartzCronTriggers quartzCronTriggers) throws SchedulerException, ParseException {
         LOG.debug("Attempt to update cron trigger {}", quartzCronTriggers);
-
         final TriggerKey triggerKey = new TriggerKey(quartzCronTriggers.getTriggerName(), quartzCronTriggers.getTriggerGroup());
         CronTriggerImpl trigger = (CronTriggerImpl) scheduler.getTrigger(triggerKey);
         trigger.setCronExpression(quartzCronTriggers.getCronExpression());
         scheduler.rescheduleJob(triggerKey, trigger);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void createCronTrigger(@RequestBody QuartzCronTriggers quartzCronTriggers) throws SchedulerException, ParseException {
-        LOG.debug("Attempt to create cron trigger {}", quartzCronTriggers);
-        quartzCronTriggersRepository.save(quartzCronTriggers);
-    }
+
 
     @RequestMapping(value = "/{triggergroup}/{triggername}", method = RequestMethod.DELETE)
     public void deleteCronTrigger(@PathVariable String triggername, @PathVariable String triggergroup) throws SchedulerException {
