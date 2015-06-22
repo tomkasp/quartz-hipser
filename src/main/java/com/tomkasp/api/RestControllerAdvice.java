@@ -1,5 +1,6 @@
 package com.tomkasp.api;
 
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +48,18 @@ public class RestControllerAdvice {
         restApiError.setApiCode(ApiErrorCodes.INVALID_REQUEST_BODY);
         restApiError.setUserMessage("Error during object validation");
         restApiError.setDeveloperMessage("Validation error add more detailed message to the validation message");
+
+        return createResponseEntity(restApiError);
+    }
+
+    @ExceptionHandler(SchedulerException.class)
+    public ResponseEntity<RestApiError> handleException(SchedulerException e){
+
+        LOG.error("Api Error caused by exception", e);
+        RestApiError restApiError = new RestApiError(RestApiHttpStatus.BAD_REQUEST);
+        restApiError.setApiCode(ApiErrorCodes.UANBLE_TO_PARSE_REQUEST);
+        restApiError.setUserMessage("Quartz scheduler error");
+        restApiError.setDeveloperMessage("Exception during quartz actions");
 
         return createResponseEntity(restApiError);
     }
